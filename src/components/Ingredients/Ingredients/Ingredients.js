@@ -2,11 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import IngredientForm from '../IngredientForm/IngredientForm';
 import IngredientList from '../IngredientList/IngredientList';
+import ErrorModal from '../../UI/ErrorModal/ErrorModal';
 import Search from '../Search/Search';
 
 const Ingredients = () => {
 	const [ userIngredients, setUserIngredients ] = useState([]);
 	const [ isLoading, setIsLoading ] = useState(false);
+	const [ error, setError ] = useState();
 
 	useEffect(
 		() => {
@@ -39,13 +41,26 @@ const Ingredients = () => {
 		setIsLoading(true);
 		fetch(`https://start-hooks-udemy.firebaseio.com/ingredients/${ingredientId}.json`, {
 			method: 'DELETE'
-		}).then(res => {
-			setIsLoading(false);
-			setUserIngredients(prevIngredients => prevIngredients.filter(ingredient => ingredient.id !== ingredientId));
-		});
+		})
+			.then(res => {
+				setIsLoading(false);
+				setUserIngredients(prevIngredients =>
+					prevIngredients.filter(ingredient => ingredient.id !== ingredientId)
+				);
+			})
+			.catch(err => {
+				// setError(err.message)
+				setError('Somethine went wrong!');
+				setIsLoading(false);
+			});
+	};
+
+	const clearError = () => {
+		setError(null);
 	};
 	return (
 		<div>
+			{error && <ErrorModal onClose={clearError}>{error}</ErrorModal>}
 			<IngredientForm onAddIngredient={addIngredientHandler} loading={isLoading} />
 
 			<section>
