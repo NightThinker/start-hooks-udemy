@@ -21,6 +21,13 @@ const Ingredients = () => {
 		});
 	}, []);
 
+	useEffect(
+		() => {
+			console.log('Renderimg', userIngredients);
+		},
+		[ userIngredients ]
+	);
+
 	const addIngredientHandler = ingredient => {
 		fetch('https://start-hooks-udemy.firebaseio.com/ingredients.json', {
 			method: 'POST',
