@@ -19,11 +19,28 @@ const ingredientReducer = (currentIngredients, action) => {
 	}
 };
 
+const httpReducer = (curHttpState, action) => {
+	switch (action.type) {
+		case 'SEND':
+			return { loading: true, error: null };
+		case 'RESPONSE':
+			return { ...curHttpState, loading: false };
+		case 'ERROR':
+			return { loading: false, error: action.errorMessage };
+		case 'CLEAR':
+			return { ...curHttpState, error: null };
+
+		default:
+			throw Error('Should not be reached!');
+	}
+};
+
 const Ingredients = () => {
 	const [ userIngredients, dispatch ] = useReducer(ingredientReducer, []);
+	const [ httpState, dispatchHttp ] = useReducer(httpReducer, { loading: false, error: null });
 	// const [ userIngredients, setUserIngredients ] = useState([]);
-	const [ isLoading, setIsLoading ] = useState(false);
-	const [ error, setError ] = useState();
+	// const [ isLoading, setIsLoading ] = useState(false);
+	// const [ error, setError ] = useState();
 
 	useEffect(
 		() => {
@@ -38,14 +55,16 @@ const Ingredients = () => {
 	}, []);
 
 	const addIngredientHandler = ingredient => {
-		setIsLoading(true);
+		dispatchHttp({ type: 'SEND' });
+		// setIsLoading(true);
 		fetch('https://start-hooks-udemy.firebaseio.com/ingredients.json', {
 			method: 'POST',
 			body: JSON.stringify(ingredient),
 			headers: { 'Content-Type': 'application/json' }
 		})
 			.then(res => {
-				setIsLoading(false);
+				dispatchHttp({ type: 'RESPONSE' });
+				// setIsLoading(false);
 				return res.json();
 			})
 			.then(resData => {
@@ -55,12 +74,14 @@ const Ingredients = () => {
 	};
 
 	const removeIngredientHandler = ingredientId => {
-		setIsLoading(true);
+		dispatchHttp({ type: 'SEND' });
+		// setIsLoading(true);
 		fetch(`https://start-hooks-udemy.firebaseio.com/ingredients/${ingredientId}.json`, {
 			method: 'DELETE'
 		})
 			.then(res => {
-				setIsLoading(false);
+				dispatchHttp({ type: 'RESPONSE' });
+				// setIsLoading(false);
 				dispatch({ type: 'DELETE', id: ingredientId });
 				// setUserIngredients(prevIngredients =>
 				// 	prevIngredients.filter(ingredient => ingredient.id !== ingredientId)
@@ -68,18 +89,21 @@ const Ingredients = () => {
 			})
 			.catch(err => {
 				// setError(err.message)
-				setError('Somethine went wrong!');
-				setIsLoading(false);
+				dispatchHttp({ type: 'ERROR', errorMessage: 'Somethine went wrong!' });
+				// setError('Somethine went wrong!');
+				// setIsLoading(false);
 			});
 	};
 
 	const clearError = () => {
-		setError(null);
+		dispatchHttp({ type: 'CLEAR' });
+
+		// setError(null);
 	};
 	return (
 		<div>
-			{error && <ErrorModal onClose={clearError}>{error}</ErrorModal>}
-			<IngredientForm onAddIngredient={addIngredientHandler} loading={isLoading} />
+			{httpState.error && <ErrorModal onClose={clearError}>{httpState.error}</ErrorModal>}
+			<IngredientForm onAddIngredient={addIngredientHandler} loading={httpState.loading} />
 
 			<section>
 				<Search onLoadIngredients={filteredIngredientsHandler} />
