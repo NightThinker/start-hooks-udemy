@@ -20,7 +20,7 @@ const IngredientForm = React.memo(props => {
 							type='text'
 							id='title'
 							value={inputState.title}
-							onChange={event => setInputState({ title: event.target.value })}
+							onChange={event => setInputState({ ...inputState, title: event.target.value })}
 						/>
 					</FormControlStyle>
 					<FormControlStyle>
@@ -29,7 +29,7 @@ const IngredientForm = React.memo(props => {
 							type='number'
 							id='amount'
 							value={inputState.amout}
-							onChange={event => setInputState({ amout: event.target.value })}
+							onChange={event => setInputState({ ...inputState, amout: event.target.value })}
 						/>
 					</FormControlStyle>
 					<IngredientFormActions>
