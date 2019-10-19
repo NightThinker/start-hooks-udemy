@@ -7,20 +7,6 @@ import Search from '../Search/Search';
 const Ingredients = () => {
 	const [ userIngredients, setUserIngredients ] = useState([]);
 
-	useEffect(() => {
-		fetch('https://start-hooks-udemy.firebaseio.com/ingredients.json').then(res => res.json()).then(resData => {
-			const loadingIngredients = [];
-			for (const key in resData) {
-				loadingIngredients.push({
-					id: key,
-					title: resData[key].title,
-					amount: resData[key].amount
-				});
-			}
-			setUserIngredients(loadingIngredients);
-		});
-	}, []);
-
 	useEffect(
 		() => {
 			console.log('Renderimg', userIngredients);
