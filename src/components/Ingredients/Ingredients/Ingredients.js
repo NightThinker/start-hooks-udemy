@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import IngredientForm from '../IngredientForm/IngredientForm';
 import IngredientList from '../IngredientList/IngredientList';
@@ -6,6 +6,20 @@ import Search from '../Search/Search';
 
 const Ingredients = () => {
 	const [ userIngredients, setUserIngredients ] = useState([]);
+
+	useEffect(() => {
+		fetch('https://start-hooks-udemy.firebaseio.com/ingredients.json').then(res => res.json()).then(resData => {
+			const loadingIngredients = [];
+			for (const key in resData) {
+				loadingIngredients.push({
+					id: key,
+					title: resData[key].title,
+					amount: resData[key].amount
+				});
+			}
+			setUserIngredients(loadingIngredients);
+		});
+	}, []);
 
 	const addIngredientHandler = ingredient => {
 		fetch('https://start-hooks-udemy.firebaseio.com/ingredients.json', {
