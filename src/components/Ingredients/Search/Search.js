@@ -9,7 +9,7 @@ const Search = React.memo(props => {
 	const inputRef = useRef();
 	useEffect(
 		() => {
-			setTimeout(() => {
+			const timer = setTimeout(() => {
 				if (filter === inputRef.current.value) {
 					const query = filter.length === 0 ? '' : `?orderBy="title"&equalTo="${filter}"`;
 					fetch('https://start-hooks-udemy.firebaseio.com/ingredients.json' + query)
@@ -27,6 +27,9 @@ const Search = React.memo(props => {
 						});
 				}
 			}, 500);
+			return () => {
+				clearTimeout(timer);
+			};
 		},
 		[ filter, onLoadIngredients, inputRef ]
 	);
