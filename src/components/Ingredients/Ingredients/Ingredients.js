@@ -54,7 +54,7 @@ const Ingredients = () => {
 		// setUserIngredients(filteredIngredients);
 	}, []);
 
-	const addIngredientHandler = ingredient => {
+	const addIngredientHandler = useCallback(ingredient => {
 		dispatchHttp({ type: 'SEND' });
 		// setIsLoading(true);
 		fetch('https://start-hooks-udemy.firebaseio.com/ingredients.json', {
@@ -71,9 +71,9 @@ const Ingredients = () => {
 				dispatch({ type: 'ADD', ingredient: { id: resData.name, ...ingredient } });
 				// setUserIngredients(prevIngredients => [ ...prevIngredients, { id: resData.name, ...ingredient } ]);
 			});
-	};
+	}, []);
 
-	const removeIngredientHandler = ingredientId => {
+	const removeIngredientHandler = useCallback(ingredientId => {
 		dispatchHttp({ type: 'SEND' });
 		// setIsLoading(true);
 		fetch(`https://start-hooks-udemy.firebaseio.com/ingredients/${ingredientId}.json`, {
@@ -93,7 +93,7 @@ const Ingredients = () => {
 				// setError('Somethine went wrong!');
 				// setIsLoading(false);
 			});
-	};
+	}, []);
 
 	const clearError = () => {
 		dispatchHttp({ type: 'CLEAR' });
