@@ -2,7 +2,7 @@ import React from 'react';
 
 import { IngredientListStyle } from './IngredientListStyle';
 
-const IngredientList = React.memo(props => {
+const IngredientList = props => {
 	console.log('Render List');
 	return (
 		<IngredientListStyle>
@@ -17,6 +17,6 @@ const IngredientList = React.memo(props => {
 			</ul>
 		</IngredientListStyle>
 	);
-});
+};
 
 export default IngredientList;
