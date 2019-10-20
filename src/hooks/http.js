@@ -47,11 +47,11 @@ const useHttp = () => {
 	}, []);
 
 	return {
-		isLoading: httpState.isLoading,
+		isLoading: httpState.loading,
 		data: httpState.data,
 		error: httpState.error,
 		sendRequest: sendRequest,
-		reqExtra: httpState.reqExtra,
+		reqExtra: httpState.extra,
 		reqIdentifer: httpState.identifier
 	};
 };
